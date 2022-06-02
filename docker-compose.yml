@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+  cadastro-db:
+    container_name: cadastro-db
+    image: postgres:12.2
+    ports:
+      - 15432:5432
+    
+    environment:
+      POSTGRES_USER: cadastro
+      POSTGRES_PASSWORD: cadastro
+
+  marketplace-db:
+    container_name: marketplace-db
+    image: postgres:12.2
+    ports:
+      - 15433:5432
+    
+    environment:
+      POSTGRES_USER: marketplace
+      POSTGRES_PASSWORD: marketplace
+    
+
+  pedido-db:
+    container_name: pedido-db
+    image: postgres:12.2
+    ports:
+      - 15434:5432
+    
+    environment:
+      POSTGRES_USER: pedido
+      POSTGRES_PASSWORD: pedido
+
+  ifood-db:
+    container_name: ifood-db
+    image: postgres:12.2
+    ports:
+      - 15435:5432
+    
+    environment:
+      POSTGRES_USER: ifood
+      POSTGRES_PASSWORD: ifood
+    
+    
