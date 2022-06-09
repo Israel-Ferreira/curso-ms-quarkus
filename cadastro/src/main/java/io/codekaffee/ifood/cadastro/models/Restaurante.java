@@ -29,5 +29,21 @@ public class Restaurante {
     @OneToOne
     public Localizacao localizacao;
 
+    public Restaurante(){
+        this.localizacao = new Localizacao();
+    }
+
+    public Restaurante(String proprietario, String nome, String cnpj, Double latitude, Double longitude) {
+        this.proprietario = proprietario;
+        this.nome = nome;
+        this.cnpj = cnpj;
+        this.localizacao = new Localizacao();
+
+        this.localizacao.latitude = latitude;
+        this.localizacao.longitude = longitude;
+    }
+
+    
+
 
 }
