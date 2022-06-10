@@ -29,6 +29,8 @@ import javax.ws.rs.core.Response.Status;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
+import org.eclipse.microprofile.openapi.annotations.tags.Tag;
+import org.eclipse.microprofile.openapi.annotations.tags.Tags;
 
 @Path(value = "/restaurantes")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -48,6 +50,7 @@ public class RestaurantResource {
     }
 
     @GET
+    @Tag(name = "Restaurantes")
     @Produces(MediaType.APPLICATION_JSON)
     public Response listRestaurants() {
         List<Restaurante> restaurantes = repository.findAll().list();
@@ -56,6 +59,7 @@ public class RestaurantResource {
 
     @POST
     @Transactional
+    @Tag(name = "Restaurantes")
     public Response criarRestaurante(RestauranteDTO restauranteDTO) {
         Restaurante restaurante = restauranteDTO.toModel();
 
@@ -68,6 +72,7 @@ public class RestaurantResource {
 
     @GET
     @Path(value = "{id}")
+    @Tag(name = "Restaurantes")
     public Response getById(@PathParam("id") Long id) {
         Optional<Restaurante> restaurante = repository.findByIdOptional(id);
 
@@ -81,6 +86,7 @@ public class RestaurantResource {
     @PUT
     @Transactional
     @Path(value = "{id}")
+    @Tag(name = "Restaurantes")
     public Response updateById(@PathParam("id") Long id, RestauranteDTO dto) {
         Restaurante restauranteDb = repository.findByIdOptional(id)
                 .orElseThrow(NotFoundException::new);
@@ -95,6 +101,7 @@ public class RestaurantResource {
     @DELETE
     @Transactional
     @Path(value = "{id}")
+    @Tag(name = "Restaurantes")
     public Response deleteRestaurante(@PathParam("id") Long id) {
 
         return Response.noContent().build();
@@ -109,6 +116,9 @@ public class RestaurantResource {
         description = "Listar de um restaurante informado pelo id",
         summary = "Listar pratos"
     )
+    @Tags(value = {
+        @Tag(name = "Prato"),
+    })
     public Response listarPratos(@PathParam("id") Long id){
         Restaurante restaurante =  repository.findByIdOptional(id)
             .orElseThrow(NotFoundException::new);
@@ -136,6 +146,9 @@ public class RestaurantResource {
         description = "Prato Criado com sucesso",
         content = @Content(mediaType = MediaType.APPLICATION_JSON)
     )
+    @Tags(value = {
+        @Tag(name = "Prato"),
+    })
     public Response adicionarPratos(@PathParam("id") Long id, PratoDTO dto){
         Restaurante restaurante =  repository.findByIdOptional(id)
             .orElseThrow(NotFoundException::new);
@@ -157,6 +170,9 @@ public class RestaurantResource {
 
     @GET
     @Path("{id}/pratos/{pratoId}")
+    @Tags(value = {
+        @Tag(name = "Prato"),
+    })
     public Response getPrato(@PathParam("id") Long id, @PathParam("pratoId") Long pratoId){
         Optional<Restaurante> restaurante =  repository.findByIdOptional(id);
 
@@ -174,6 +190,9 @@ public class RestaurantResource {
     @DELETE
     @Transactional
     @Path("{id}/pratos/{pratoId}")
+    @Tags(value = {
+        @Tag(name = "Prato"),
+    })
     public Response deletePrato(@PathParam("id") Long id, @PathParam("pratoId") Long pratoId){
         Optional<Restaurante> restaurante =  repository.findByIdOptional(id);
 
@@ -192,6 +211,9 @@ public class RestaurantResource {
     @PUT
     @Transactional
     @Path("{id}/pratos/{pratoId}")
+    @Tags(value = {
+        @Tag(name = "Prato"),
+    })
     public Response updatePrato(@PathParam("id") Long id, @PathParam("pratoId") Long pratoId, PratoDTO dto){
         Optional<Restaurante> restaurante =  repository.findByIdOptional(id);
 
@@ -202,8 +224,10 @@ public class RestaurantResource {
         
         pratoRepository.findByIdOptional(id)
             .ifPresentOrElse(prato -> {
-                prato.setNome(dto.getNome());
-                prato.setDescricao(dto.getDescricao());
+                // prato.setNome(dto.getNome());
+                // prato.setDescricao(dto.getDescricao());
+
+                prato.setPreco(dto.getPreco());
 
                 pratoRepository.persist(prato);
 
