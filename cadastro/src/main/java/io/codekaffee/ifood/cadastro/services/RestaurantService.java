@@ -11,7 +11,10 @@ import javax.transaction.Transactional;
 import javax.validation.Validator;
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.NotFoundException;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
+import io.codekaffee.ifood.cadastro.dto.ErrorDTO;
 import io.codekaffee.ifood.cadastro.dto.PratoDTO;
 import io.codekaffee.ifood.cadastro.dto.RestauranteDTO;
 import io.codekaffee.ifood.cadastro.dto.RestauranteViewDTO;
@@ -58,6 +61,7 @@ public class RestaurantService {
     @Transactional
     public void criarRestaurante(RestauranteDTO restauranteDTO) {
         var violations = validator.validate(restauranteDTO);
+        
 
         if (!violations.isEmpty()) {
             // List<String> errors = violations.stream().map(err -> err.getMessage())
@@ -65,6 +69,18 @@ public class RestaurantService {
 
             throw new BadRequestException();
         }
+
+        
+        repository.find("cnpj", restauranteDTO.getCnpj())
+            .firstResultOptional()
+            .ifPresent(rest -> {
+                ErrorDTO errorMsg = new ErrorDTO("CNPJ Já existente", Status.BAD_REQUEST.getStatusCode());
+                throw new BadRequestException(
+                    Response.status(Status.BAD_REQUEST).entity(errorMsg).build()
+                );
+            });
+
+
 
         Restaurante restaurante = restauranteDTO.toModel();
 
