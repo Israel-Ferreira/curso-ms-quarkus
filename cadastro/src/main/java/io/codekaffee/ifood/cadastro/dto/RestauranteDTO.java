@@ -2,6 +2,8 @@ package io.codekaffee.ifood.cadastro.dto;
 
 import java.io.Serializable;
 
+
+
 import io.codekaffee.ifood.cadastro.models.Restaurante;
 
 public class RestauranteDTO implements Serializable {
@@ -11,10 +13,12 @@ public class RestauranteDTO implements Serializable {
     private String nome;
     private String cnpj;
 
+
     private String proprietarioId;
 
-    private Double latitude;
-    private Double longitude;
+    private LocalizacaoDTO localizacao;
+
+
 
 
     public RestauranteDTO() {
@@ -50,34 +54,21 @@ public class RestauranteDTO implements Serializable {
         this.proprietarioId = proprietarioId;
     }
 
-
-    public Double getLatitude() {
-        return latitude;
+    public LocalizacaoDTO getLocalizacao() {
+        return localizacao;
     }
 
-
-    public void setLatitude(Double latitude) {
-        this.latitude = latitude;
+    public void setLocalizacao(LocalizacaoDTO localizacao) {
+        this.localizacao = localizacao;
     }
-
-
-    public Double getLongitude() {
-        return longitude;
-    }
-
-
-    public void setLongitude(Double longitude) {
-        this.longitude = longitude;
-    }
-
 
     public Restaurante toModel() {
         return new Restaurante(
             this.proprietarioId,
             this.nome,
             this.cnpj, 
-            this.latitude,
-            this.longitude
+            this.localizacao.getLatitude(),
+            this.localizacao.getLongitude()
         );
     }
 

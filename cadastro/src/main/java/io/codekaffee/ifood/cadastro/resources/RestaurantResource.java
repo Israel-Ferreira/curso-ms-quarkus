@@ -42,8 +42,11 @@ public class RestaurantResource {
     private final LocalizacaoRepository localizacaoRepository;
 
     @Inject
-    public RestaurantResource(PratoRepository pratoRepository, RestauranteRepository restauranteRepository,
-            LocalizacaoRepository localizacaoRepository) {
+    public RestaurantResource(
+            PratoRepository pratoRepository,
+            RestauranteRepository restauranteRepository,
+            LocalizacaoRepository localizacaoRepository
+    ) {
         this.pratoRepository = pratoRepository;
         this.repository = restauranteRepository;
         this.localizacaoRepository = localizacaoRepository;
@@ -107,82 +110,58 @@ public class RestaurantResource {
         return Response.noContent().build();
     }
 
-
-
-
     @GET
     @Path("{id}/pratos")
-    @Operation(
-        description = "Listar de um restaurante informado pelo id",
-        summary = "Listar pratos"
-    )
+    @Operation(description = "Listar de um restaurante informado pelo id", summary = "Listar pratos")
     @Tags(value = {
-        @Tag(name = "Prato"),
+            @Tag(name = "Prato"),
     })
-    public Response listarPratos(@PathParam("id") Long id){
-        Restaurante restaurante =  repository.findByIdOptional(id)
-            .orElseThrow(NotFoundException::new);
+    public Response listarPratos(@PathParam("id") Long id) {
+        Restaurante restaurante = repository.findByIdOptional(id)
+                .orElseThrow(NotFoundException::new);
 
-        
-        List<Prato> pratos =  pratoRepository.findPratosByRestaurante(restaurante);
+        List<Prato> pratos = pratoRepository.findPratosByRestaurante(restaurante);
         return Response.ok(pratos).build();
     }
-
 
     @POST
     @Transactional
     @Path("{id}/pratos")
-    @Operation(
-        description = "Adiciona um prato a um restaurante informado pelo id",
-        summary = "Adicionar Prato"
-    )
-    @APIResponse(
-        responseCode = "400",
-        description = "Erro de validação ao criar o prato",
-        content = @Content(mediaType = MediaType.APPLICATION_JSON)
-    )
-    @APIResponse(
-        responseCode = "201",
-        description = "Prato Criado com sucesso",
-        content = @Content(mediaType = MediaType.APPLICATION_JSON)
-    )
+    @Operation(description = "Adiciona um prato a um restaurante informado pelo id", summary = "Adicionar Prato")
+    @APIResponse(responseCode = "400", description = "Erro de validação ao criar o prato", content = @Content(mediaType = MediaType.APPLICATION_JSON))
+    @APIResponse(responseCode = "201", description = "Prato Criado com sucesso", content = @Content(mediaType = MediaType.APPLICATION_JSON))
     @Tags(value = {
-        @Tag(name = "Prato"),
+            @Tag(name = "Prato"),
     })
-    public Response adicionarPratos(@PathParam("id") Long id, PratoDTO dto){
-        Restaurante restaurante =  repository.findByIdOptional(id)
-            .orElseThrow(NotFoundException::new);
+    public Response adicionarPratos(@PathParam("id") Long id, PratoDTO dto) {
+        Restaurante restaurante = repository.findByIdOptional(id)
+                .orElseThrow(NotFoundException::new);
 
         Prato prato = new Prato(
-            dto.getNome(), 
-            dto.getDescricao(),
-            dto.getPreco(), 
-            restaurante
-        );
-
+                dto.getNome(),
+                dto.getDescricao(),
+                dto.getPreco(),
+                restaurante);
 
         pratoRepository.persist(prato);
 
         return Response.status(Status.CREATED).build();
     }
 
-
-
     @GET
     @Path("{id}/pratos/{pratoId}")
     @Tags(value = {
-        @Tag(name = "Prato"),
+            @Tag(name = "Prato"),
     })
-    public Response getPrato(@PathParam("id") Long id, @PathParam("pratoId") Long pratoId){
-        Optional<Restaurante> restaurante =  repository.findByIdOptional(id);
+    public Response getPrato(@PathParam("id") Long id, @PathParam("pratoId") Long pratoId) {
+        Optional<Restaurante> restaurante = repository.findByIdOptional(id);
 
-        if(restaurante.isEmpty()){
+        if (restaurante.isEmpty()) {
             throw new NotFoundException();
         }
 
         Prato prato = pratoRepository.findByIdOptional(pratoId)
-            .orElseThrow(NotFoundException::new);
-
+                .orElseThrow(NotFoundException::new);
 
         return Response.ok(prato).build();
     }
@@ -191,50 +170,45 @@ public class RestaurantResource {
     @Transactional
     @Path("{id}/pratos/{pratoId}")
     @Tags(value = {
-        @Tag(name = "Prato"),
+            @Tag(name = "Prato"),
     })
-    public Response deletePrato(@PathParam("id") Long id, @PathParam("pratoId") Long pratoId){
-        Optional<Restaurante> restaurante =  repository.findByIdOptional(id);
+    public Response deletePrato(@PathParam("id") Long id, @PathParam("pratoId") Long pratoId) {
+        Optional<Restaurante> restaurante = repository.findByIdOptional(id);
 
-        if(restaurante.isEmpty()){
+        if (restaurante.isEmpty()) {
             throw new NotFoundException();
         }
 
-        
         pratoRepository.deleteById(pratoId);
-
 
         return Response.noContent().build();
     }
-
 
     @PUT
     @Transactional
     @Path("{id}/pratos/{pratoId}")
     @Tags(value = {
-        @Tag(name = "Prato"),
+            @Tag(name = "Prato"),
     })
-    public Response updatePrato(@PathParam("id") Long id, @PathParam("pratoId") Long pratoId, PratoDTO dto){
-        Optional<Restaurante> restaurante =  repository.findByIdOptional(id);
+    public Response updatePrato(@PathParam("id") Long id, @PathParam("pratoId") Long pratoId, PratoDTO dto) {
+        Optional<Restaurante> restaurante = repository.findByIdOptional(id);
 
-        if(restaurante.isEmpty()){
+        if (restaurante.isEmpty()) {
             throw new NotFoundException();
         }
 
-        
         pratoRepository.findByIdOptional(id)
-            .ifPresentOrElse(prato -> {
-                // prato.setNome(dto.getNome());
-                // prato.setDescricao(dto.getDescricao());
+                .ifPresentOrElse(prato -> {
+                    // prato.setNome(dto.getNome());
+                    // prato.setDescricao(dto.getDescricao());
 
-                prato.setPreco(dto.getPreco());
+                    prato.setPreco(dto.getPreco());
 
-                pratoRepository.persist(prato);
+                    pratoRepository.persist(prato);
 
-            }, () -> {
-                throw new NotFoundException();
-            });
-
+                }, () -> {
+                    throw new NotFoundException();
+                });
 
         return Response.noContent().build();
     }

@@ -10,8 +10,9 @@ import io.codekaffee.ifood.cadastro.repositories.PratoRepository;
 import io.codekaffee.ifood.cadastro.repositories.RestauranteRepository;
 import io.quarkus.test.common.QuarkusTestResource;
 import io.quarkus.test.junit.QuarkusTest;
-import org.approvaltests.JsonApprovals;
+import io.restassured.http.ContentType;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import javax.inject.Inject;
@@ -37,7 +38,7 @@ public class RestaurantResourceTest {
     LocalizacaoRepository localizacaoRepository;
 
     @Test
-    @DataSet(value = "restaurants-cenario.yml", cleanAfter = true)
+    @DataSet(value = "restaurants-cenario.yml")
     public void testBuscarRestaurantes() {
         var resultado = given()
                 .when().get("/restaurantes")
@@ -48,8 +49,26 @@ public class RestaurantResourceTest {
 
         Assertions.assertNotNull(resultado.getBody());
 
+    }
 
 
+    @Test
+    @DataSet(value = "restaurants-cenario.yml")
+    @DisplayName(value = "Deve retornar um restaurante cadastrado e o status 200")
+    public void  testBuscarRestaurantePorId(){
+        Long parameterID = 123L;
+        var resultado =  given()
+                .with().pathParams("id", parameterID)
+                .when().get("/restaurantes/{id}")
+                .then()
+                .contentType(ContentType.JSON)
+                .statusCode(200)
+                .body("nome", not(is("")))
+                .body("id", is(parameterID.intValue()))
+                .extract().response();
+
+
+        Assertions.assertNotNull(resultado.getBody());
 
     }
 }

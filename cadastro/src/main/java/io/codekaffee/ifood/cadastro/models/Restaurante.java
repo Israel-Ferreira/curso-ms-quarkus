@@ -26,7 +26,7 @@ public class Restaurante {
 
     private String cnpj;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     private Localizacao localizacao;
 
     public Restaurante(){
@@ -39,8 +39,8 @@ public class Restaurante {
         this.cnpj = cnpj;
         this.localizacao = new Localizacao();
 
-        this.localizacao.latitude = latitude;
-        this.localizacao.longitude = longitude;
+        this.localizacao.setLatitude(latitude);
+        this.localizacao.setLongitude(longitude);
     }
 
     
@@ -161,6 +161,16 @@ public class Restaurante {
             return false;
         return true;
     }
+
+    @Override
+    public String toString() {
+        return "Restaurante [cnpj=" + cnpj + ", dataAtualizacao=" + dataAtualizacao + ", dataCriacao=" + dataCriacao
+                + ", id=" + id + ", localizacao=" + localizacao + ", nome=" + nome + ", proprietario=" + proprietario
+                + "]";
+    }
+
+
+    
 
     
     
