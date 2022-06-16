@@ -1,5 +1,9 @@
 package io.codekaffee.ifood.cadastro.dto;
 
+import java.util.Date;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import io.codekaffee.ifood.cadastro.models.Restaurante;
 
 public class RestauranteViewDTO {
@@ -7,9 +11,17 @@ public class RestauranteViewDTO {
     private String nome;
     private String proprietarioId;
 
+
     private String cnpj;
+
+
     private LocalizacaoDTO localizacao;
 
+    @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
+    private Date dataCriacao;
+
+    @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
+    private Date dataAtualizacao;
     
     public RestauranteViewDTO() {
         this.localizacao = new LocalizacaoDTO();
@@ -22,6 +34,8 @@ public class RestauranteViewDTO {
 
         this.cnpj = restaurante.getCnpj();
         this.localizacao = new LocalizacaoDTO(restaurante.getLocalizacao());
+        this.dataCriacao = restaurante.getDataCriacao();
+        this.dataAtualizacao =  restaurante.getDataAtualizacao();
     }
     
     public Long getId() {
@@ -54,6 +68,24 @@ public class RestauranteViewDTO {
     public void setLocalizacao(LocalizacaoDTO localizacao) {
         this.localizacao = localizacao;
     }
+
+    public Date getDataCriacao() {
+        return dataCriacao;
+    }
+
+    public void setDataCriacao(Date dataCriacao) {
+        this.dataCriacao = dataCriacao;
+    }
+
+    public Date getDataAtualizacao() {
+        return dataAtualizacao;
+    }
+
+    public void setDataAtualizacao(Date dataAtualizacao) {
+        this.dataAtualizacao = dataAtualizacao;
+    }
+
+    
 
     
 }

@@ -2,22 +2,28 @@ package io.codekaffee.ifood.cadastro.dto;
 
 import java.io.Serializable;
 
+import javax.validation.constraints.NotBlank;
 
+import org.hibernate.validator.constraints.br.CNPJ;
 
 import io.codekaffee.ifood.cadastro.models.Restaurante;
+import io.smallrye.common.constraint.NotNull;
 
 public class RestauranteDTO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    @NotNull
+    @NotBlank(message = "O nome não pode estar em branco")
     private String nome;
+
+    @CNPJ(message = "CNPJ Inválido")
     private String cnpj;
 
 
     private String proprietarioId;
 
     private LocalizacaoDTO localizacao;
-
 
 
 
