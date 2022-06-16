@@ -8,9 +8,9 @@ public class Localizacao {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public Long id;
+    private Long id;
 
-    public Double latitude;
+    private Double latitude;
 
     private  Double longitude;
 

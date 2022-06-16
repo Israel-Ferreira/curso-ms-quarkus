@@ -1,10 +1,17 @@
 package io.codekaffee.ifood.cadastro.dto;
 
+import io.codekaffee.ifood.cadastro.models.Localizacao;
+
 public class LocalizacaoDTO {
     private Double latitude;
     private Double longitude;
 
     public LocalizacaoDTO() {
+    }
+
+    public LocalizacaoDTO(Localizacao localizacao){
+        this.latitude = localizacao.getLatitude();
+        this.longitude = localizacao.getLongitude();
     }
 
     public Double getLatitude() {

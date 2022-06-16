@@ -2,6 +2,7 @@ package io.codekaffee.ifood.cadastro.resources;
 
 import io.codekaffee.ifood.cadastro.dto.PratoDTO;
 import io.codekaffee.ifood.cadastro.dto.RestauranteDTO;
+import io.codekaffee.ifood.cadastro.dto.RestauranteViewDTO;
 import io.codekaffee.ifood.cadastro.models.Prato;
 import io.codekaffee.ifood.cadastro.models.Restaurante;
 import io.codekaffee.ifood.cadastro.repositories.LocalizacaoRepository;
@@ -10,6 +11,8 @@ import io.codekaffee.ifood.cadastro.repositories.RestauranteRepository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 import javax.transaction.Transactional;
@@ -27,8 +30,12 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import org.eclipse.microprofile.openapi.annotations.Operation;
+import org.eclipse.microprofile.openapi.annotations.enums.SchemaType;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
+import org.eclipse.microprofile.openapi.annotations.responses.APIResponseSchema;
+import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 import org.eclipse.microprofile.openapi.annotations.tags.Tags;
 
@@ -43,9 +50,9 @@ public class RestaurantResource {
 
     @Inject
     public RestaurantResource(
-            PratoRepository pratoRepository,
-            RestauranteRepository restauranteRepository,
-            LocalizacaoRepository localizacaoRepository
+        PratoRepository pratoRepository,
+        RestauranteRepository restauranteRepository,
+        LocalizacaoRepository localizacaoRepository
     ) {
         this.pratoRepository = pratoRepository;
         this.repository = restauranteRepository;
@@ -55,8 +62,25 @@ public class RestaurantResource {
     @GET
     @Tag(name = "Restaurantes")
     @Produces(MediaType.APPLICATION_JSON)
+    @APIResponses(value = {
+        @APIResponse(
+            responseCode = "200",
+            content = {
+                @Content(schema = @Schema(type = SchemaType.ARRAY, implementation = RestauranteViewDTO.class))
+            }
+        ),
+
+        @APIResponse(
+            responseCode = "500",
+            description = "Erro ao lidar com a requisição"
+        )
+    })
     public Response listRestaurants() {
-        List<Restaurante> restaurantes = repository.findAll().list();
+        List<RestauranteViewDTO> restaurantes = repository.findAll().list()
+            .stream().map(RestauranteViewDTO::new)
+            .collect(Collectors.toList());
+
+
         return Response.ok(restaurantes).build();
     }
 
@@ -76,6 +100,7 @@ public class RestaurantResource {
     @GET
     @Path(value = "{id}")
     @Tag(name = "Restaurantes")
+    @APIResponseSchema(responseCode = "200", value = RestauranteViewDTO.class)
     public Response getById(@PathParam("id") Long id) {
         Optional<Restaurante> restaurante = repository.findByIdOptional(id);
 
@@ -83,7 +108,10 @@ public class RestaurantResource {
             return Response.status(Status.NOT_FOUND).build();
         }
 
-        return Response.ok(restaurante.get()).build();
+
+        RestauranteViewDTO view = new RestauranteViewDTO(restaurante.get());
+
+        return Response.ok(view).build();
     }
 
     @PUT
