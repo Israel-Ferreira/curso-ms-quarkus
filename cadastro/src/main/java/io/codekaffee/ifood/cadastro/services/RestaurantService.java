@@ -1,6 +1,5 @@
 package io.codekaffee.ifood.cadastro.services;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -8,13 +7,10 @@ import java.util.stream.Collectors;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
+import javax.validation.Valid;
 import javax.validation.Validator;
-import javax.ws.rs.BadRequestException;
 import javax.ws.rs.NotFoundException;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
 
-import io.codekaffee.ifood.cadastro.dto.ErrorDTO;
 import io.codekaffee.ifood.cadastro.dto.PratoDTO;
 import io.codekaffee.ifood.cadastro.dto.RestauranteDTO;
 import io.codekaffee.ifood.cadastro.dto.RestauranteViewDTO;
@@ -59,27 +55,13 @@ public class RestaurantService {
 
 
     @Transactional
-    public void criarRestaurante(RestauranteDTO restauranteDTO) {
-        var violations = validator.validate(restauranteDTO);
-        
-
-        if (!violations.isEmpty()) {
-            // List<String> errors = violations.stream().map(err -> err.getMessage())
-            //         .collect(Collectors.toList());
-
-            throw new BadRequestException();
-        }
-
+    public void criarRestaurante(@Valid RestauranteDTO restauranteDTO) {
         
         repository.find("cnpj", restauranteDTO.getCnpj())
             .firstResultOptional()
             .ifPresent(rest -> {
-                ErrorDTO errorMsg = new ErrorDTO("CNPJ Já existente", Status.BAD_REQUEST.getStatusCode());
-                throw new BadRequestException(
-                    Response.status(Status.BAD_REQUEST).entity(errorMsg).build()
-                );
+                throw new ValidationException("CNPJ Já existente");
             });
-
 
 
         Restaurante restaurante = restauranteDTO.toModel();
@@ -91,19 +73,10 @@ public class RestaurantService {
 
 
     @Transactional
-    public void updateRestaurant(Long id, UpdateRestauranteDTO dto) {
+    public void updateRestaurant(Long id, @Valid UpdateRestauranteDTO dto) {
         Restaurante restauranteDb = repository.findByIdOptional(id)
                 .orElseThrow(NotFoundException::new);
 
-        var violations = validator.validate(dto);
-
-        if (!violations.isEmpty()) {
-            List<String> errors = violations.stream().map(err -> err.getMessage())
-                    .collect(Collectors.toList());
-
-            throw new ValidationException(Arrays.toString(errors.toArray()));
-
-        }
 
         restauranteDb.setNome(dto.getNome());
 
