@@ -20,6 +20,17 @@ services:
     environment:
       POSTGRES_USER: marketplace
       POSTGRES_PASSWORD: marketplace
+
+  keycloak-ifood:
+    container_name: keycloak-ifood
+    image: jboss/keycloak:16.1.1
+    environment:
+      KEYCLOAK_USER: admin
+      KEYCLOAK_PASSWORD: admin
+    ports:
+      - 8180:8080
+
+
     
 
   pedido-db:
