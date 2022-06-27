@@ -70,6 +70,10 @@
       <artifactId>quarkus-smallrye-jwt</artifactId>
     </dependency>
     <dependency>
+      <groupId>io.opentracing.contrib</groupId>
+      <artifactId>opentracing-jdbc</artifactId>
+   </dependency>
+    <dependency>
       <groupId>com.github.database-rider</groupId>
       <artifactId>rider-core</artifactId>
       <version>1.32.3</version>
