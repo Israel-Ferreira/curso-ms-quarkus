@@ -33,7 +33,12 @@ public class RestauranteViewDTO {
         this.proprietarioId = restaurante.getProprietario();
 
         this.cnpj = restaurante.getCnpj();
-        this.localizacao = new LocalizacaoDTO(restaurante.getLocalizacao());
+
+        if(restaurante.getLocalizacao() != null){
+            this.localizacao = new LocalizacaoDTO(restaurante.getLocalizacao());
+        }
+
+        
         this.dataCriacao = restaurante.getDataCriacao();
         this.dataAtualizacao =  restaurante.getDataAtualizacao();
     }

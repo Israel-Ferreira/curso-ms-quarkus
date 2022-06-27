@@ -10,6 +10,7 @@ import io.codekaffee.ifood.cadastro.repositories.PratoRepository;
 import io.codekaffee.ifood.cadastro.repositories.RestauranteRepository;
 import io.quarkus.test.common.QuarkusTestResource;
 import io.quarkus.test.junit.QuarkusTest;
+import io.quarkus.test.security.TestSecurity;
 import io.restassured.http.ContentType;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -38,6 +39,7 @@ public class RestaurantResourceTest {
     LocalizacaoRepository localizacaoRepository;
 
     @Test
+    @TestSecurity(user = "proprietario1", roles = {"proprietario"})
     @DataSet(value = "restaurants-cenario.yml")
     public void testBuscarRestaurantes() {
         var resultado = given()
@@ -54,6 +56,7 @@ public class RestaurantResourceTest {
 
     @Test
     @DataSet(value = "restaurants-cenario.yml")
+    @TestSecurity(user = "proprietario1", roles = {"proprietario"})
     @DisplayName(value = "Deve retornar um restaurante cadastrado e o status 200")
     public void  testBuscarRestaurantePorId(){
         Long parameterID = 123L;
