@@ -11,6 +11,8 @@ import javax.validation.Valid;
 import javax.validation.Validator;
 import javax.ws.rs.NotFoundException;
 
+import org.eclipse.microprofile.opentracing.Traced;
+
 import io.codekaffee.ifood.cadastro.dto.PratoDTO;
 import io.codekaffee.ifood.cadastro.dto.RestauranteDTO;
 import io.codekaffee.ifood.cadastro.dto.RestauranteViewDTO;
@@ -22,6 +24,7 @@ import io.codekaffee.ifood.cadastro.repositories.LocalizacaoRepository;
 import io.codekaffee.ifood.cadastro.repositories.PratoRepository;
 import io.codekaffee.ifood.cadastro.repositories.RestauranteRepository;
 
+@Traced
 @ApplicationScoped
 public class RestaurantService {
 
