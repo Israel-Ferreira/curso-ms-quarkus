@@ -17,6 +17,9 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import org.eclipse.microprofile.metrics.annotation.Counted;
+import org.eclipse.microprofile.metrics.annotation.SimplyTimed;
+import org.eclipse.microprofile.metrics.annotation.Timed;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.enums.SchemaType;
 import org.eclipse.microprofile.openapi.annotations.enums.SecuritySchemeType;
@@ -59,6 +62,8 @@ public class RestaurantResource {
     }
 
     @GET
+    @Counted(name = "Quantidade Buscas de Restaurantes")
+    @SimplyTimed(name = "Tempo de Busca dos Restaurantes")
     @Tag(name = "Restaurantes")
     @Produces(MediaType.APPLICATION_JSON)
     @APIResponses(value = {

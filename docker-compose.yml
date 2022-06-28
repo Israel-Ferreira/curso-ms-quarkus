@@ -71,4 +71,25 @@ services:
       POSTGRES_USER: ifood
       POSTGRES_PASSWORD: ifood
     
+
+
+  prometheus-ifood:
+    container_name: prometheus-ifood
+    build: 
+      dockerfile: Dockerfile.prometheus
+      context:  .
+
+    ports:
+      - 9090:9090
+
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+
+  grafana_ifood:
+    container_name: grafana_ifood
+    image: grafana/grafana:6.5.0
+    ports:
+      - "3000:3000"
+
     
