@@ -31,8 +31,18 @@ public class PratoRepository {
     }
 
 
+    public Uni<PratoDTO> findById(Long id){
+        Uni<RowSet<Row>> query =  pool.preparedQuery("select * from prato where prato.id = $1 order by nome asc").execute(Tuple.of(id));
+        return query.onItem()
+            .transform(RowSet::iterator)
+            .onItem()
+            .transform(iterator -> iterator.hasNext() ? PratoDTO.from(iterator.next()) : null);
+
+    }
+
+
     public Multi<PratoDTO> findByRestauranteId(Long id){
-        String query =  String.format("select * from prato where prato.restaurante_id = $1");
+        String query =  String.format("select * from prato where prato.restaurante_id = $1 order by nome asc");
         Uni<RowSet<Row>> pq = pool.preparedQuery(query).execute(Tuple.of(id));
 
         return pq.onItem().transformToMulti(row -> Multi.createFrom().iterable(row))
