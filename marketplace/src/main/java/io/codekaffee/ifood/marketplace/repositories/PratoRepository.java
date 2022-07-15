@@ -14,6 +14,7 @@ import io.vertx.mutiny.pgclient.PgPool;
 import io.vertx.mutiny.sqlclient.PreparedQuery;
 import io.vertx.mutiny.sqlclient.Row;
 import io.vertx.mutiny.sqlclient.RowSet;
+import io.vertx.mutiny.sqlclient.Tuple;
 
 @ApplicationScoped
 public class PratoRepository {
@@ -27,5 +28,14 @@ public class PratoRepository {
         return query.onItem().transformToMulti(row -> Multi.createFrom().iterable(row))
             .onItem().transform(PratoDTO::from);
 
+    }
+
+
+    public Multi<PratoDTO> findByRestauranteId(Long id){
+        String query =  String.format("select * from prato where prato.restaurante_id = $1");
+        Uni<RowSet<Row>> pq = pool.preparedQuery(query).execute(Tuple.of(id));
+
+        return pq.onItem().transformToMulti(row -> Multi.createFrom().iterable(row))
+            .onItem().transform(PratoDTO::from);
     }
 }
