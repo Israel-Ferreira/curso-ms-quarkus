@@ -42,7 +42,7 @@ public class PratoRepository {
 
 
     public Multi<PratoDTO> findByRestauranteId(Long id){
-        String query =  String.format("select * from prato where prato.restaurante_id = $1 order by nome asc");
+        String query = "select * from prato where prato.restaurante_id = $1 order by nome asc";
         Uni<RowSet<Row>> pq = pool.preparedQuery(query).execute(Tuple.of(id));
 
         return pq.onItem().transformToMulti(row -> Multi.createFrom().iterable(row))

@@ -36,26 +36,24 @@ import org.slf4j.impl.Slf4jLogger;
 @ApplicationScoped
 public class RestaurantService {
 
-    private static final Logger logger = LoggerFactory.getLogger(Slf4jLogger.class);
+
 
     private final PratoRepository pratoRepository;
     private final RestauranteRepository repository;
     private final LocalizacaoRepository localizacaoRepository;
 
-
-    @Channel("restaurants")
-    private final Emitter<String> emitter;
+    private final RestauranteProducer restauranteProducer;
 
     @Inject
     public RestaurantService(
             PratoRepository pratoRepository,
             RestauranteRepository repository,
             LocalizacaoRepository localizacaoRepository,
-            Emitter<String> emitter) {
+            RestauranteProducer restauranteProducer) {
         this.pratoRepository = pratoRepository;
         this.repository = repository;
         this.localizacaoRepository = localizacaoRepository;
-        this.emitter = emitter;
+        this.restauranteProducer = restauranteProducer;
     }
 
     public List<RestauranteViewDTO> listRestaurants() {
@@ -86,13 +84,7 @@ public class RestaurantService {
 
         repository.persist(restaurante);
 
-
-        try (Jsonb json = JsonbBuilder.create()){
-            String msg = json.toJson(restaurante);
-            emitter.send(msg);
-        } catch (Exception e) {
-            logger.error("Erro ao enviar a msg. para o broker: {}", e.getMessage());
-        }
+        restauranteProducer.sendRestauranteToQuoue(restaurante);
     }
 
 

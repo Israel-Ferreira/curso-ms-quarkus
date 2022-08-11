@@ -60,7 +60,7 @@ public class RestaurantResource {
 
 
     @Inject
-    public RestaurantResource(RestaurantService restaurantService, Emitter<String> emitter) {
+    public RestaurantResource(RestaurantService restaurantService) {
         this.restaurantService = restaurantService;
     }
 
