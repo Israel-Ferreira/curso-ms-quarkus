@@ -40,6 +40,8 @@ import io.codekaffee.ifood.cadastro.dto.RestauranteViewDTO;
 import io.codekaffee.ifood.cadastro.dto.UpdateRestauranteDTO;
 import io.codekaffee.ifood.cadastro.models.Prato;
 import io.codekaffee.ifood.cadastro.services.RestaurantService;
+import org.eclipse.microprofile.reactive.messaging.Channel;
+import org.eclipse.microprofile.reactive.messaging.Emitter;
 
 @Path(value = "/restaurantes")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -55,8 +57,10 @@ public class RestaurantResource {
 
     private final RestaurantService restaurantService;
 
+
+
     @Inject
-    public RestaurantResource(RestaurantService restaurantService) {
+    public RestaurantResource(RestaurantService restaurantService, Emitter<String> emitter) {
         this.restaurantService = restaurantService;
     }
 

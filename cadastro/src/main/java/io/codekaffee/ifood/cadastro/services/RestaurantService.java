@@ -6,6 +6,8 @@ import java.util.stream.Collectors;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.json.bind.Jsonb;
+import javax.json.bind.JsonbBuilder;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 import javax.validation.Validator;
@@ -23,26 +25,37 @@ import io.codekaffee.ifood.cadastro.models.Restaurante;
 import io.codekaffee.ifood.cadastro.repositories.LocalizacaoRepository;
 import io.codekaffee.ifood.cadastro.repositories.PratoRepository;
 import io.codekaffee.ifood.cadastro.repositories.RestauranteRepository;
+import org.eclipse.microprofile.reactive.messaging.Channel;
+import org.eclipse.microprofile.reactive.messaging.Emitter;
+import org.jboss.logmanager.LogManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.impl.Slf4jLogger;
 
 @Traced
 @ApplicationScoped
 public class RestaurantService {
 
+    private static final Logger logger = LoggerFactory.getLogger(Slf4jLogger.class);
+
     private final PratoRepository pratoRepository;
     private final RestauranteRepository repository;
     private final LocalizacaoRepository localizacaoRepository;
-    private final Validator validator;
+
+
+    @Channel("restaurants")
+    private final Emitter<String> emitter;
 
     @Inject
     public RestaurantService(
             PratoRepository pratoRepository,
             RestauranteRepository repository,
             LocalizacaoRepository localizacaoRepository,
-            Validator validator) {
+            Emitter<String> emitter) {
         this.pratoRepository = pratoRepository;
         this.repository = repository;
         this.localizacaoRepository = localizacaoRepository;
-        this.validator = validator;
+        this.emitter = emitter;
     }
 
     public List<RestauranteViewDTO> listRestaurants() {
@@ -72,6 +85,14 @@ public class RestaurantService {
         localizacaoRepository.persist(restaurante.getLocalizacao());
 
         repository.persist(restaurante);
+
+
+        try (Jsonb json = JsonbBuilder.create()){
+            String msg = json.toJson(restaurante);
+            emitter.send(msg);
+        } catch (Exception e) {
+            logger.error("Erro ao enviar a msg. para o broker: {}", e.getMessage());
+        }
     }
 
 

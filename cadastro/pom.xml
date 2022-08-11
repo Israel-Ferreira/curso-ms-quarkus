@@ -82,6 +82,10 @@
       <artifactId>quarkus-flyway</artifactId>
     </dependency>
     <dependency>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-smallrye-reactive-messaging-amqp</artifactId>
+    </dependency>
+    <dependency>
       <groupId>com.github.database-rider</groupId>
       <artifactId>rider-core</artifactId>
       <version>1.32.3</version>
