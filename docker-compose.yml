@@ -70,6 +70,18 @@ services:
     environment:
       POSTGRES_USER: ifood
       POSTGRES_PASSWORD: ifood
+
+
+
+  amq:
+    image: vromero/activemq-artemis:latest-alpine
+    container_name: activemq
+    environment:
+      ARTEMIS_USERNAME: admin
+      ARTEMIS_PASSWORD: admin
+    ports:
+      - 8161:8161
+      - 21616:61616
     
 
 
