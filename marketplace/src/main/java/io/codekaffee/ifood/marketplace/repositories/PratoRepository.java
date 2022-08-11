@@ -5,9 +5,12 @@ import java.util.stream.StreamSupport;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.transaction.Transactional;
 
 import io.codekaffee.ifood.marketplace.data.PratoDTO;
+import io.codekaffee.ifood.marketplace.models.Localizacao;
 import io.codekaffee.ifood.marketplace.models.Prato;
+import io.codekaffee.ifood.marketplace.models.Restaurante;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import io.vertx.mutiny.pgclient.PgPool;
@@ -27,6 +30,26 @@ public class PratoRepository {
 
         return query.onItem().transformToMulti(row -> Multi.createFrom().iterable(row))
             .onItem().transform(PratoDTO::from);
+
+    }
+
+
+
+    @Transactional
+    public void persist(Restaurante restaurante) {
+        Localizacao localizacao = restaurante.getLocalizacao();
+
+        var stmt = pool.preparedQuery(
+                "insert into restaurantes (id, nome, longitude) values (" +
+                        "$1, $2, $3 " +
+                        ")"
+        );
+
+
+        Tuple tuple = Tuple.of(localizacao.getId(), localizacao.getLatitude(), localizacao.getLongitude());
+
+        stmt.execute(tuple).await().indefinitely();
+
 
     }
 

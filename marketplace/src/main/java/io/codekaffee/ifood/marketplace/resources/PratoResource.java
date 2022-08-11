@@ -17,7 +17,9 @@ import io.codekaffee.ifood.marketplace.data.PratoDTO;
 import io.codekaffee.ifood.marketplace.repositories.PratoRepository;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
+import org.eclipse.microprofile.opentracing.Traced;
 
+@Traced
 @Path("/pratos")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
