@@ -11,6 +11,7 @@ import io.codekaffee.ifood.marketplace.data.PratoDTO;
 import io.codekaffee.ifood.marketplace.models.Localizacao;
 import io.codekaffee.ifood.marketplace.models.Prato;
 import io.codekaffee.ifood.marketplace.models.Restaurante;
+import io.smallrye.common.annotation.Blocking;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import io.vertx.mutiny.pgclient.PgPool;
@@ -35,12 +36,12 @@ public class PratoRepository {
 
 
 
-    @Transactional
+
     public void persist(Restaurante restaurante) {
         Localizacao localizacao = restaurante.getLocalizacao();
 
         var stmt = pool.preparedQuery(
-                "insert into restaurantes (id, nome, longitude) values (" +
+                "insert into localizacao (id, latitude, longitude) values (" +
                         "$1, $2, $3 " +
                         ")"
         );
@@ -49,6 +50,13 @@ public class PratoRepository {
         Tuple tuple = Tuple.of(localizacao.getId(), localizacao.getLatitude(), localizacao.getLongitude());
 
         stmt.execute(tuple).await().indefinitely();
+
+
+        String query =  "insert into restaurante (id, nome, localizacao_id) values ($1, $2, $3)";
+
+        pool.preparedQuery(query).execute(Tuple.of(restaurante.getId(), restaurante.getNome(), localizacao.getId()))
+                .await()
+                .indefinitely();
 
 
     }

@@ -2,6 +2,7 @@ package io.codekaffee.ifood.marketplace.consumers;
 
 import io.codekaffee.ifood.marketplace.models.Restaurante;
 import io.codekaffee.ifood.marketplace.repositories.PratoRepository;
+import io.smallrye.common.annotation.Blocking;
 import org.eclipse.microprofile.opentracing.Traced;
 import org.eclipse.microprofile.reactive.messaging.Incoming;
 
@@ -18,6 +19,7 @@ public class MarketplaceConsumer {
     @Inject
     private PratoRepository repository;
 
+    @Blocking
     @Incoming("restaurantes")
     public void consumeRestauranteQueueMessages(String json) {
         try(Jsonb create = JsonbBuilder.create()) {
