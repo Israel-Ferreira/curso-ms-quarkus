@@ -85,6 +85,17 @@ services:
       - 5672:5672
     
 
+  mongo-ifood:
+    container_name: mongo-ifood
+    image: mongo:4.2.22-bionic
+    ports:
+      - "27017:27017"
+
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: pedido
+      MONGO_INITDB_ROOT_PASSWORD: pedido
+      MONGO_INITDB_DATABASE: pedido
+
 
   prometheus-ifood:
     container_name: prometheus-ifood
