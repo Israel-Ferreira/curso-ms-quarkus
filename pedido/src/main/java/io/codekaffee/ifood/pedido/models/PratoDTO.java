@@ -1,8 +1,7 @@
-package io.codekaffee.ifood.marketplace.data;
+package io.codekaffee.ifood.pedido.models;
 
 import java.math.BigDecimal;
 
-import io.vertx.mutiny.sqlclient.Row;
 
 public class PratoDTO {
     private Long id;
@@ -57,14 +56,9 @@ public class PratoDTO {
         this.preco = preco;
     }
 
-
-    public static PratoDTO from(Row row) {
-        return new PratoDTO(
-            row.getLong("id"),
-            row.getString("nome"),
-            row.getString("descricao"),
-            row.getBigDecimal("preco")
-        );
+    @Override
+    public String toString() {
+        return "PratoDTO [id=" + id + ", nome=" + nome + ", descricao=" + descricao + ", preco=" + preco + "]";
     }
 
     

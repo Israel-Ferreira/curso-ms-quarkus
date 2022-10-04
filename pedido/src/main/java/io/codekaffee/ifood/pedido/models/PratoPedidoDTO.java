@@ -1,36 +1,26 @@
-package io.codekaffee.ifood.marketplace.data;
+package io.codekaffee.ifood.pedido.models;
 
 import java.math.BigDecimal;
 
-import io.vertx.mutiny.sqlclient.Row;
-
-public class PratoDTO {
-    private Long id;
-
+public class PratoPedidoDTO {
     private String nome;
 
     private String descricao;
 
     private BigDecimal preco;
 
-    
-
-    public PratoDTO() {
+    public PratoPedidoDTO() {
+        super();
     }
 
-    public PratoDTO(Long id, String nome, String descricao, BigDecimal preco) {
-        this.id = id;
+    
+
+
+    public PratoPedidoDTO(String nome, String descricao, BigDecimal preco) {
+        super();
         this.nome = nome;
         this.descricao = descricao;
         this.preco = preco;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getNome() {
@@ -58,13 +48,11 @@ public class PratoDTO {
     }
 
 
-    public static PratoDTO from(Row row) {
-        return new PratoDTO(
-            row.getLong("id"),
-            row.getString("nome"),
-            row.getString("descricao"),
-            row.getBigDecimal("preco")
-        );
+
+
+    @Override
+    public String toString() {
+        return "PratoPedidoDTO [nome=" + nome + ", descricao=" + descricao + ", preco=" + preco + "]";
     }
 
     

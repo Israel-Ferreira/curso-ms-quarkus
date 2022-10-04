@@ -1,4 +1,4 @@
-package io.codekaffee.ifood.marketplace.data;
+package io.codekaffee.ifood.pedido.models;
 
 import java.util.List;
 
@@ -8,6 +8,19 @@ public class PedidoDTO {
     private RestauranteDTO restaurante;
 
     private String cliente;
+
+    public PedidoDTO() {
+    }
+
+    
+
+    public PedidoDTO(List<PratoPedidoDTO> pratos, RestauranteDTO restaurante, String cliente) {
+        this.pratos = pratos;
+        this.restaurante = restaurante;
+        this.cliente = cliente;
+    }
+
+
 
     public List<PratoPedidoDTO> getPratos() {
         return pratos;
@@ -34,7 +47,12 @@ public class PedidoDTO {
     }
 
 
-    
 
+    @Override
+    public String toString() {
+        return "PedidoDTO [pratos=" + pratos + ", restaurante=" + restaurante + ", cliente=" + cliente + "]";
+    }
+
+    
     
 }

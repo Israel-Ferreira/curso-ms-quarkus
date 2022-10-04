@@ -6,7 +6,6 @@ import io.codekaffee.ifood.marketplace.data.PratoDTO;
 import io.codekaffee.ifood.marketplace.data.PratoPedidoDTO;
 import io.codekaffee.ifood.marketplace.data.RestauranteDTO;
 import io.codekaffee.ifood.marketplace.models.PratoCarrinho;
-import io.codekaffee.ifood.marketplace.models.Restaurante;
 import io.codekaffee.ifood.marketplace.repositories.PratoCarrinhoRepository;
 import io.codekaffee.ifood.marketplace.repositories.PratoRepository;
 import io.smallrye.common.annotation.Blocking;
